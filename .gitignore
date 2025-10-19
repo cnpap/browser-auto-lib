@@ -9,3 +9,13 @@ lib-cov
 logs
 node_modules
 temp
+
+.env
+.env.development
+.env.*.local
+
+output.txt
+dist
+.mastra
+*.db
+*.db-*

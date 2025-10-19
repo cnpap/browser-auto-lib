@@ -4,12 +4,17 @@ packages:
   - packages/*
   - examples/*
 
-ignoreWorkspaceRootCheck: true
-shellEmulator: true
-
+catalog:
+  '@ai-sdk/openai': ^2.0.52
+  '@mastra/core': ^0.21.1
+  '@mastra/libsql': ^0.15.2
+  '@mastra/loggers': ^0.10.16
+  '@mastra/memory': ^0.15.7
+  mastra: ^0.17.0
+  zod: ^4.1.12
 catalogs:
   cli:
-    '@antfu/eslint-config': ^5.4.1
+    '@antfu/eslint-config': 5.4.1
     '@antfu/ni': ^26.0.1
     bumpp: ^10.2.3
     eslint: ^9.36.0
@@ -28,6 +33,11 @@ catalogs:
     yaml: ^2.8.1
   types:
     '@types/node': ^24.5.2
+
+ignoreWorkspaceRootCheck: true
+
 onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
+
+shellEmulator: true

@@ -34,7 +34,18 @@
     "start": "tsx src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "mastra:dev": "mastra dev",
+    "mastra:build": "mastra build",
+    "mastra:start": "mastra start"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "catalog:",
+    "@mastra/core": "catalog:",
+    "@mastra/libsql": "catalog:",
+    "@mastra/loggers": "catalog:",
+    "@mastra/memory": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",
@@ -44,6 +55,7 @@
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",
     "lint-staged": "catalog:cli",
+    "mastra": "catalog:",
     "simple-git-hooks": "catalog:cli",
     "tinyexec": "catalog:testing",
     "tsdown": "catalog:cli",
