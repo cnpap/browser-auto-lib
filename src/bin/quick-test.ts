@@ -17,4 +17,4 @@ async function quickTest(): Promise<void> {
   await new Promise(() => {})
 }
 
-quickTest()
+void quickTest()

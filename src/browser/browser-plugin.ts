@@ -167,7 +167,7 @@ export async function createBrowserWithPlugin(options: BrowserPluginOptions = {}
   page: Page
 }> {
   const plugin = new BrowserPlugin(options)
-  return await plugin.launch()
+  return plugin.launch()
 }
 
 export default BrowserPlugin
