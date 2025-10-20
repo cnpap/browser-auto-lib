@@ -45,6 +45,8 @@
     "@mastra/libsql": "catalog:",
     "@mastra/loggers": "catalog:",
     "@mastra/memory": "catalog:",
+    "crawlee": "catalog:",
+    "playwright": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
