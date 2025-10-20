@@ -19,3 +19,5 @@ dist
 .mastra
 *.db
 *.db-*
+
+src/browser/extension/content.js
