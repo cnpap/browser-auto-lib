@@ -58,6 +58,8 @@
     "eslint": "catalog:cli",
     "lint-staged": "catalog:cli",
     "mastra": "catalog:",
+    "prettier": "catalog:",
+    "prettier-plugin-svelte": "catalog:",
     "simple-git-hooks": "catalog:cli",
     "tinyexec": "catalog:testing",
     "tsdown": "catalog:cli",
@@ -72,6 +74,10 @@
     "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
   },
   "lint-staged": {
-    "*": "eslint --fix"
+    "packages/svelte-extension/**/*.{html,svelte,ts,js,css,md,json}": "prettier --write",
+    "src/**/*.ts": "eslint --fix",
+    "test/**/*.ts": "eslint --fix",
+    "types/**/*.ts": "eslint --fix",
+    "vitest.config.ts": "eslint --fix"
   }
 }
