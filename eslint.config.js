@@ -7,8 +7,9 @@ export default antfu(
     pnpm: true,
     // 明确排除子项目目录和 README 文件，避免 tsconfigRootDir 冲突
     ignores: [
+      'packages/**/*',
+      'examples/**/*',
       'playground/**/*',
-      'examples/**/*.ts',
       'docs/**/*',
       'README.md',
       'README.zh.md',

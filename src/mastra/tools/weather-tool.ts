@@ -31,7 +31,7 @@ export const weatherTool = createTool({
   inputSchema: weatherToolInputSchema,
   outputSchema: weatherToolOutputSchema,
   execute: async ({ context }) => {
-    return await getWeather(context.location)
+    return getWeather(context.location)
   },
 })
 
