@@ -75,6 +75,7 @@
   },
   "lint-staged": {
     "packages/svelte-extension/**/*.{html,svelte,ts,js,css,md,json}": "prettier --write",
+    "packages/browser-api/{src,apps,libs,test}/**/*.ts": "eslint --fix",
     "src/**/*.ts": "eslint --fix",
     "test/**/*.ts": "eslint --fix",
     "types/**/*.ts": "eslint --fix",
