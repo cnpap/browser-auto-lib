@@ -1,21 +1,22 @@
 <script lang="ts">
-  const UI_ATTR = "data-browser-auto-ui";
+  const UI_ATTR = 'data-browser-auto-ui';
 
   let isPickerActive = false;
   // 新增两个短选择器的状态
-  let selectorPrimary = "";
-  let selectorSecondary = "";
+  let selectorPrimary = '';
+  let selectorSecondary = '';
 
   // 悬浮高亮框的几何信息（以状态驱动 DOM）
   let overlayLeft = 0;
   let overlayTop = 0;
   let overlayWidth = 0;
   let overlayHeight = 0;
+  let lastPickedElement: Element | null = null;
 
   function isOurUI(el: Element | null): boolean {
     if (!el) return false;
     const h = el as HTMLElement;
-    if (h.getAttribute && h.getAttribute(UI_ATTR) === "true") return true;
+    if (h.getAttribute && h.getAttribute(UI_ATTR) === 'true') return true;
     if (h.closest && h.closest(`[${UI_ATTR}="true"]`)) return true;
     return false;
   }
@@ -25,25 +26,27 @@
       navigator.clipboard
         .writeText(text)
         .then(() => {
-          console.debug("Browser Auto Plugin: 选择器已复制到剪贴板");
+          console.debug('Browser Auto Plugin: 选择器已复制到剪贴板');
         })
         .catch(() => {});
       return;
     }
-    const ta = document.createElement("textarea");
+    const ta = document.createElement('textarea');
     ta.value = text;
-    ta.setAttribute(UI_ATTR, "true");
-    ta.style.position = "fixed";
-    ta.style.left = "-9999px";
+    ta.setAttribute(UI_ATTR, 'true');
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
     document.body.appendChild(ta);
     ta.select();
     try {
-      document.execCommand("copy");
+      document.execCommand('copy');
     } catch {}
     document.body.removeChild(ta);
   }
 
-  import { computeShortSelectors } from "./selector";
+  import { computeShortSelectors } from './selector';
+  import { runStructureRecognition } from './dom-structure';
+
   // 可配置的过滤标识，'.' 前缀表示 class，'#' 前缀表示 id
   const FILTER_TOKENS: string[] = [];
 
@@ -72,15 +75,17 @@
     e.preventDefault();
     e.stopPropagation();
     const sels = computeShortSelectors(target, FILTER_TOKENS);
-    console.debug("Browser Auto Plugin: 生成选择器 =>", sels);
+    console.debug('Browser Auto Plugin: 生成选择器 =>', sels);
     selectorPrimary = sels.primary;
     selectorSecondary = sels.secondary;
     // 默认复制首选短选择器
     copyText(selectorPrimary);
+    // 记录最近一次点击的元素，供结构识别使用
+    lastPickedElement = target;
   }
 
   function onKey(e: KeyboardEvent) {
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       disablePicker();
     }
   }
@@ -111,20 +116,25 @@
     try {
       const els = document.querySelectorAll(sel);
       if (els.length === 0) {
-        console.debug("Browser Auto Plugin: 打印失败，未匹配到元素 =>", sel);
+        console.debug('Browser Auto Plugin: 打印失败，未匹配到元素 =>', sel);
         return;
       }
       console.debug(
-        "Browser Auto Plugin: 打印选择器 =>",
+        'Browser Auto Plugin: 打印选择器 =>',
         sel,
-        "匹配到",
+        '匹配到',
         els.length,
-        "个元素",
+        '个元素',
       );
       els.forEach((el, idx) => console.debug(`[${idx}]`, el));
     } catch (err) {
-      console.debug("Browser Auto Plugin: 打印失败，非法选择器 =>", sel, err);
+      console.debug('Browser Auto Plugin: 打印失败，非法选择器 =>', sel, err);
     }
+  }
+
+  function onClickStruct() {
+    const root = lastPickedElement || document.body;
+    runStructureRecognition(root);
   }
 </script>
 
@@ -136,14 +146,26 @@
 />
 
 <!-- check 控件 -->
-<button
-  data-browser-auto-ui="true"
-  id="browser-auto-check"
-  type="button"
-  on:click|preventDefault|stopPropagation={togglePicker}
->
-  check
-</button>
+<div data-browser-auto-ui="true" id="browser-auto-actions">
+  <button
+    data-browser-auto-ui="true"
+    class="action-btn"
+    id="browser-auto-check"
+    type="button"
+    on:click|preventDefault|stopPropagation={togglePicker}
+  >
+    选择元素
+  </button>
+  <button
+    data-browser-auto-ui="true"
+    class="action-btn"
+    id="browser-auto-struct"
+    type="button"
+    on:click|preventDefault|stopPropagation={onClickStruct}
+  >
+    结构识别
+  </button>
+</div>
 
 <!-- 选择模式信息栏 -->
 {#if isPickerActive}
