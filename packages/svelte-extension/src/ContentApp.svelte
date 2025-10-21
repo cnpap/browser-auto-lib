@@ -50,14 +50,12 @@
   function updateOverlayForElement(el: Element | null) {
     if (!el || !(el as HTMLElement).getBoundingClientRect) return;
     const rect = (el as HTMLElement).getBoundingClientRect();
-    const scrollLeft =
-      window.pageXOffset || document.documentElement.scrollLeft;
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-    overlayLeft = rect.left + scrollLeft - 2;
-    overlayTop = rect.top + scrollTop - 2;
-    overlayWidth = rect.width + 4;
-    overlayHeight = rect.height + 4;
+    // 使用视口坐标，保证外框不超过元素尺寸
+    overlayLeft = rect.left;
+    overlayTop = rect.top;
+    overlayWidth = rect.width;
+    overlayHeight = rect.height;
   }
 
   function onHover(e: MouseEvent) {

@@ -97,14 +97,16 @@
 }
 
 #browser-auto-hover-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 0;
   height: 0;
-  border: 2px solid rgba(0, 200, 255, 0.95);
+  box-sizing: border-box;
+  outline: 2px solid rgba(0, 200, 255, 0.95);
+  outline-offset: -1px;
   background: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.05);
+  /* 去掉超大阴影以避免滚动条抖动 */
   pointer-events: none;
   z-index: 100001;
 }
