@@ -9,6 +9,9 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && pnpm -w exec tsc -p packages/svelte-extension/tsconfig.node.json"
   },
+  "dependencies": {
+    "browser-api": "workspace:*"
+  },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "catalog:",
     "@tsconfig/svelte": "catalog:",
@@ -17,6 +20,7 @@
     "svelte": "catalog:",
     "svelte-check": "catalog:",
     "typescript": "catalog:cli",
-    "vite": "catalog:cli"
+    "vite": "catalog:cli",
+    "vtzac": "0.0.2-beta.7"
   }
 }
