@@ -1,6 +1,6 @@
 /** @type {import('prettier').Config} */
 module.exports = {
   plugins: ['prettier-plugin-svelte'],
-  "singleQuote": true,
+  singleQuote: true,
   endOfLine: 'lf',
 }
