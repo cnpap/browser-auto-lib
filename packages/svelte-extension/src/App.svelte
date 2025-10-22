@@ -1,8 +1,9 @@
 <script lang="ts">
-  import Counter from './lib/Counter.svelte';
   import { _http } from 'vtzac';
   import { AppController } from 'browser-api/src/app.controller';
   import { getApiBaseUrl } from './config';
+  import ContentApp from './ContentApp.svelte';
+  import './ContentApp.less';
 
   let hello: string = '';
   let loading = false;
@@ -30,7 +31,6 @@
 </script>
 
 <main>
-  <Counter />
   <section style="margin-top: 16px;">
     <button on:click={fetchHello} disabled={loading}>
       {loading ? '请求中...' : '调用后端: getHello()'}
@@ -42,4 +42,5 @@
       <p>后端响应：{hello}</p>
     {/if}
   </section>
+  <ContentApp />
 </main>
