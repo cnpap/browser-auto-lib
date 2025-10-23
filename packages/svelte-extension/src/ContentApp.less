@@ -116,3 +116,169 @@
   pointer-events: none;
   z-index: 100001;
 }
+
+#browser-auto-attr-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 720px;
+  max-width: 90vw;
+  height: 70vh;
+  background: rgba(0, 0, 0, 0.95);
+  color: #fff;
+  z-index: 100003;
+  font-family: Arial, sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+#browser-auto-attr-panel .attr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+#browser-auto-attr-panel .attr-body {
+  display: flex;
+  // gap: 12px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+#browser-auto-attr-panel .attr-left {
+  flex: 0 0 40%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+#browser-auto-attr-panel .btn {
+  cursor: pointer;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+}
+#browser-auto-attr-panel .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: visible;
+}
+.rule-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.rule-list li.active {
+  outline: 1px solid rgba(0, 200, 255, 0.6);
+}
+.rule-list .ops {
+  display: flex;
+  gap: 4px;
+}
+.rule-list .btn.small {
+  padding: 2px 6px;
+}
+.rule-list .btn.small.danger {
+  background: rgba(255, 64, 64, 0.4);
+}
+.attr-right {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 12px;
+}
+.attr-right pre {
+  margin: 0;
+  font-family: Menlo, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#browser-auto-attr-panel .attr-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+#browser-auto-attr-panel .btn.primary {
+  background: rgba(0, 200, 255, 0.35);
+}
+#browser-auto-attr-panel .btn.primary:hover {
+  background: rgba(0, 200, 255, 0.5);
+}
+
+/* 一体式输入 + 按钮控件 */
+.rule-input-group {
+  display: flex;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+.rule-input-group .rule-name-input {
+  flex: 1 1 auto;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+}
+.rule-input-group .rule-name-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.rule-input-group .add-rule-btn {
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 6px 10px;
+  color: #fff;
+}
+.rule-input-group .add-rule-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* 左侧三段布局：顶部固定，剩余平分并支持滚动 */
+#browser-auto-attr-panel .attr-left .left-section {
+  padding: 12px;
+}
+#browser-auto-attr-panel .attr-left .header-section {
+  --header-height: 28px;
+  flex: 0 0 var(--header-height);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+#browser-auto-attr-panel .attr-left .rule-section,
+#browser-auto-attr-panel .attr-left .keys-section {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+}
+/* 可选属性列表布局 */
+#browser-auto-attr-panel .attr-left .attr-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#browser-auto-attr-panel .attr-left .attr-keys label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

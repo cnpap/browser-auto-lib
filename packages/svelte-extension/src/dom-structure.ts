@@ -2,9 +2,7 @@
 // 默认两层，按需逐层加深，基于环境变量长度阈值选择最接近的结果
 
 export interface StructureAttributes {
-  id?: string;
-  class?: string;
-  placeholder?: string;
+  [key: string]: string | undefined;
 }
 
 export interface StructureNode {
@@ -52,10 +50,13 @@ function shouldSkipTag(tagName: string): boolean {
   return skip.includes(tagName.toLowerCase());
 }
 
+const DEFAULT_ATTR_KEYS = ['id', 'class', 'placeholder'];
+
 function buildDomTree(
   node: Element,
   maxDepth: number,
   currentDepth = 1,
+  applyKeys: string[] = DEFAULT_ATTR_KEYS,
 ): StructureNode | null {
   if (isOurUI(node)) return null; // 跳过插件自身 UI
   if (!isVisible(node)) return null; // 过滤不可见节点
@@ -65,23 +66,87 @@ function buildDomTree(
 
   const obj: StructureNode = { tag: tagName };
   const attributes: StructureAttributes = {};
+  const h = node as HTMLElement;
 
-  const id = (node as HTMLElement).id;
-  const className = (node as HTMLElement).className as string | undefined;
-  const placeholder = (node as any)?.placeholder as string | undefined;
+  const getAttr = (name: string): string | undefined => {
+    try {
+      const v = h.getAttribute?.(name);
+      return v != null && String(v).length > 0 ? String(v) : undefined;
+    } catch {
+      return undefined;
+    }
+  };
 
-  if (id) attributes.id = id;
-  if (className) attributes.class = className;
-  if (placeholder) attributes.placeholder = placeholder;
+  for (const key of applyKeys || DEFAULT_ATTR_KEYS) {
+    switch (key) {
+      case 'id': {
+        const v = h.id;
+        if (v) attributes.id = v;
+        break;
+      }
+      case 'class': {
+        const v = h.className as string | undefined;
+        if (v) attributes.class = v;
+        break;
+      }
+      case 'name': {
+        const v = getAttr('name');
+        if (v) attributes.name = v;
+        break;
+      }
+      case 'role': {
+        const v = getAttr('role');
+        if (v) attributes.role = v;
+        break;
+      }
+      case 'tabindex': {
+        const v = getAttr('tabindex');
+        if (v) attributes.tabindex = v;
+        break;
+      }
+      case 'placeholder': {
+        const v = getAttr('placeholder');
+        if (v) attributes.placeholder = v;
+        break;
+      }
+      case 'innerText': {
+        // 仅采集 HTMLElement.innerText，避免 textContent/非元素噪声
+        const anyH = h as any;
+        const v =
+          typeof anyH?.innerText === 'string'
+            ? String(anyH.innerText).trim()
+            : '';
+        if (v) attributes.innerText = v;
+        break;
+      }
+      case 'value': {
+        const anyH = h as any;
+        const v =
+          typeof anyH?.value === 'string' ? String(anyH.value) : undefined;
+        if (v) attributes.value = v;
+        break;
+      }
+      default: {
+        const v = getAttr(key);
+        if (v) attributes[key] = v;
+        break;
+      }
+    }
+  }
 
   if (Object.keys(attributes).length > 0) obj.attributes = attributes;
 
   // 子节点（受深度限制）
   const children: StructureNode[] = [];
   if (currentDepth < maxDepth) {
-    const rawChildren = (node as HTMLElement).children || [];
+    const rawChildren = (h.children || []) as HTMLCollection;
     for (const child of Array.from(rawChildren)) {
-      const childObj = buildDomTree(child, maxDepth, currentDepth + 1);
+      const childObj = buildDomTree(
+        child,
+        maxDepth,
+        currentDepth + 1,
+        applyKeys,
+      );
       if (childObj) children.push(childObj);
     }
   }
@@ -109,6 +174,7 @@ function getLimitFromEnv(): number {
 function computeClosestByLimit(
   root: Element,
   limit: number,
+  applyKeys: string[] = DEFAULT_ATTR_KEYS,
 ): StructureRecognitionResult {
   let depth = 2;
   let prevStr = '';
@@ -120,7 +186,7 @@ function computeClosestByLimit(
   const MAX_DEPTH = 20;
 
   while (depth <= MAX_DEPTH) {
-    const tree = buildDomTree(root, depth);
+    const tree = buildDomTree(root, depth, 1, applyKeys);
     const str = stringifyTree(tree);
     const len = str.length;
 
@@ -164,7 +230,7 @@ export function runStructureRecognition(root?: Element): void {
     // 若根节点是插件自身（异常场景），降级为 document.body
     const actualRoot = isOurUI(base) ? document.body : base;
 
-    const result = computeClosestByLimit(actualRoot, limit);
+    const result = computeClosestByLimit(actualRoot, limit, DEFAULT_ATTR_KEYS);
     // 单条输出，携带层数与最终 JSON 字符串
     console.log(
       `Browser Auto Plugin: 结构识别(depth=${result.depth}, length=${result.len}, limit=${limit}) => `,
@@ -173,4 +239,18 @@ export function runStructureRecognition(root?: Element): void {
   } catch (err) {
     console.debug('Browser Auto Plugin: 结构识别失败 =>', err);
   }
+}
+
+export function recognizeStructureWithKeys(
+  root?: Element,
+  keys?: string[],
+): StructureRecognitionResult {
+  const limit = getLimitFromEnv();
+  const base = root ?? document.body;
+  const actualRoot = isOurUI(base) ? document.body : base;
+  return computeClosestByLimit(
+    actualRoot,
+    limit,
+    keys && keys.length ? keys : DEFAULT_ATTR_KEYS,
+  );
 }
